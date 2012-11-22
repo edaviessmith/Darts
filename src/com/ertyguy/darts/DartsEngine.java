@@ -21,7 +21,7 @@ public class DartsEngine {
 	public static int touchtime;
 	public static float distance;
 	
-	public static final float gamespeed = 1f;
+	public static final float gamespeed = .5f;//1f;
 	
 	public static final int BOARD = R.drawable.dartboard;
 	public static final int CEMENT = R.drawable.cement;

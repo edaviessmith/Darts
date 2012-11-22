@@ -188,15 +188,15 @@ public class DartsGameRenderer implements Renderer{
 			System.out.println("[[[[[[[[[[[[[[[[]]]]]]]]]] velocity= "+velocity+"  and touchtime= "+DartsEngine.touchtime);
 			
 			
-			rotate = ((velocity/maxvelocity)*360)-180;
+			rotate = (float) Math.sin( ((velocity/maxvelocity)* 360 - 180) * Math.PI);
 			System.out.println("{{{-------}}}  Rotate = "+rotate);
 			
 			xPosition += (DartsEngine.throwx)*DartsEngine.gamespeed;
 			yPosition -= (DartsEngine.throwy)*DartsEngine.gamespeed;
 			zPosition += velocity/10;
 			
-			velocity *= 0.99;
-			//DartsEngine.throwx /= 1.005;
+			velocity *= 0.99; // Drag
+			
 			if(DartsEngine.throwy > -10)
 				DartsEngine.throwy -= .08f;
 			
@@ -204,6 +204,8 @@ public class DartsGameRenderer implements Renderer{
 		    
 		    gl.glColor4f(0.8f, 1.0f, 0.5f, 1.0f);
 		}else if(zPosition > zBoard){
+			velocity = 0;
+			rotate = ((velocity/maxvelocity)*360)-180;
 			if(zPosition > zBoard+2) zPosition = zBoard+0.5f; //Move dart in front of board
 			 gl.glColor4f(1.0f,0.0f,0.0f,1f);  
 		}else if(yPosition > DartsEngine.bottomy){
@@ -213,7 +215,7 @@ public class DartsGameRenderer implements Renderer{
 		gl.glPushMatrix();		  
 	    
 	      gl.glTranslatef(xPosition, -yPosition, -zPosition);
-	      gl.glRotatef(rotate, 1.0f,0.0f, 0.0f);
+	      //gl.glRotatef(rotate, 1.0f,0.0f, 0.0f);
 	      dart.draw(gl);
 	    gl.glPopMatrix();
 	    
