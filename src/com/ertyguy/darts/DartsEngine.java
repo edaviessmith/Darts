@@ -11,6 +11,7 @@ public class DartsEngine {
 	public static float x = 0;
 	public static float y = 0;
 	public static float z = 0;
+
 	
 	public static float throwx = 0;
 	public static float throwy = 0;
@@ -20,6 +21,10 @@ public class DartsEngine {
 	
 	public static int touchtime;
 	public static float distance;
+	public static int selecteddart = -1;
+	public static int maxdarts = 5;
+	
+	public static Dart[] darts = new Dart[DartsEngine.maxdarts];
 	
 	public static final float gamespeed = .5f;//1f;
 	

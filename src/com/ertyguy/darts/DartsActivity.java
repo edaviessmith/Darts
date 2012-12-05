@@ -25,7 +25,7 @@ public class DartsActivity extends Activity {
 	private int touchtime;
 	//Calendar c = Calendar.getInstance(); 
 	Date now = new Date();
-	
+	private boolean firsttouch = true;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,15 @@ public class DartsActivity extends Activity {
 				
 				now = new Date();
 				DartsEngine.distance = 1;
+				if(DartsEngine.selecteddart+1 < DartsEngine.maxdarts )
+					DartsEngine.selecteddart ++;
+				else
+					DartsEngine.selecteddart = 0;
+				Dart dart = new Dart();
+				DartsEngine.darts[DartsEngine.selecteddart] = dart;
+				DartsEngine.darts[DartsEngine.selecteddart].sta = Dart.state.inhand;
+				
+				//firsttouch = false; //cheap hack
 				break;
 				
 			case MotionEvent.ACTION_MOVE:
@@ -93,6 +102,7 @@ public class DartsActivity extends Activity {
 				DartsEngine.touchtime = (int) (releasetime.getTime() - now.getTime()) / 10 ;//c.get(Calendar.SECOND) - touchtime;
 
 				DartsEngine.pressed = false;
+				
 				//DartsEngine.throwx = (x);
 				//DartsEngine.throwy = (- y);
 				break;

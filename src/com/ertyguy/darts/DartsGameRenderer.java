@@ -16,15 +16,25 @@ import android.opengl.GLU;
 import android.util.FloatMath;
 
 public class DartsGameRenderer implements Renderer{
-	private Dart dart = new Dart();
-	private DartZoom dartzoom = new DartZoom();
-	private Arrow arrow = new Arrow();
-	private Board board = new Board();
 	
+
+	//private Dart[] darts = new Dart[DartsEngine.maxdarts];
+	
+	
+	
+	private DartZoom dartzoom = new DartZoom();
+	//private Arrow arrow = new Arrow();
+	private Board board = new Board();
+	/*
 	private float zPosition = 10f;
 	private float xPosition = 0f;
 	private float yPosition = 0f;
+	private float zPrev = 10f;
+	private float xPrev = 0f;
+	private float yPrev = 0f;
+	
 	private float rotate = 0f;
+	*/
 	private long loopStart = 0;
 	private long loopEnd = 0;
 	private long loopRunTime = 0 ;
@@ -33,7 +43,7 @@ public class DartsGameRenderer implements Renderer{
 	private float zBoard = 50;
 	private float zReach = 15;
 	//private float distance = 1;
-	private float velocity = 1;
+	//private float velocity = 1;
 	private float maxvelocity = 10f;
 	private float longthrowvelocity = 4f;
 	private float throwspeed = 0.5f;
@@ -101,13 +111,40 @@ public class DartsGameRenderer implements Renderer{
         ///Draw Line
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        
-		if(unprojectedNear) drawDart(gl);
+        System.out.println("Drawing things");
+		if(unprojectedNear) {
+			for(int i=0; i< DartsEngine.maxdarts && DartsEngine.selecteddart>=0;i++ ){
+				if(i <= DartsEngine.selecteddart){
+					System.out.println("Drawing line "+i);
+					if(i==DartsEngine.selecteddart){
+						//Dart dart = new Dart();
+						//DartsEngine.darts[i] = dart;
+					}
+					System.out.println("Drawing dart # "+i);
+					
+					/*if(DartsEngine.darts[i].sta == Dart.state.hidden && DartsEngine.pressed && DartsEngine.distance < zReach){
+						DartsEngine.darts[i].sta = Dart.state.inhand;
+					}else*/ 
+					if(DartsEngine.darts[i].sta == Dart.state.inhand && !DartsEngine.pressed){//DartsEngine.darts[i].zPosition < zBoard && DartsEngine.darts[i].yPosition > DartsEngine.bottomy){
+						DartsEngine.darts[i].sta = Dart.state.inflight;
+					}else if(DartsEngine.darts[i].sta == Dart.state.inflight && DartsEngine.darts[i].zPosition > zBoard){
+						DartsEngine.darts[i].sta = Dart.state.landed;
+					}
+					
+					drawDart(gl, DartsEngine.darts[i]);
+					System.out.println("Finished drawing dart # "+i);
+				}else{
+					if(DartsEngine.darts[i] != null){
+						DartsEngine.darts[i].sta = Dart.state.hidden;
+					}
+				}
+			}
+		}
 	    
 		if(unprojectedNearStart) drawLine(gl,linepoints);
 		
 		drawBoard(gl);
-		
+		System.out.println("Finished drawing things");
 		
 		loopEnd = System.currentTimeMillis();
 		loopRunTime = ((loopEnd - loopStart));
@@ -144,93 +181,130 @@ public class DartsGameRenderer implements Renderer{
           gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
           gl.glDisable(GL10.GL_CULL_FACE);
         gl.glPopMatrix();
+        
 	}
 	
 	
-	private void drawDart(GL10 gl){
+	private void drawDart(GL10 gl, Dart dart){
 
-		if(DartsEngine.pressed && DartsEngine.distance < zReach){
-			int w = DartsEngine.display.getWidth();
-			int h = DartsEngine.display.getHeight();
+		//if(DartsEngine.pressed && DartsEngine.distance < zReach){
+		if(dart.sta == Dart.state.inhand){
+			//int w = DartsEngine.display.getWidth();
+			//int h = DartsEngine.display.getHeight();
 			//Draw colourful pyramid
-			gl.glPushMatrix();
-			  gl.glTranslatef(startvector[0], -startvector[1], -5f);
-			  gl.glRotatef( (FloatMath.sin((float)(w/(w-(DartsEngine.startx-DartsEngine.x)) ))* 360)-180, 0.0f,1.0f, 0.0f);
-			  gl.glRotatef(FloatMath.cos((float) ((DartsEngine.starty-DartsEngine.y)/h / 180 * Math.PI)), 1.0f,0.0f, 0.0f);
+			//gl.glPushMatrix();
+			 // gl.glTranslatef(startvector[0], -startvector[1], -5f);
+			  //gl.glRotatef( (FloatMath.sin((float)(w/(w-(DartsEngine.startx-DartsEngine.x)) ))* 360)-180, 0.0f,1.0f, 0.0f);
+			  //gl.glRotatef(FloatMath.cos((float) ((DartsEngine.starty-DartsEngine.y)/h / 180 * Math.PI)), 1.0f,0.0f, 0.0f);
 			  //System.out.println("moving triangle : "+((DartsEngine.startx-DartsEngine.x)/w));
 			  //arrow.draw(gl);
-			gl.glPopMatrix();
+			//gl.glPopMatrix();
 			//System.out.println("rotate around X: "+(FloatMath.sin((float)(w/(w-(DartsEngine.startx-DartsEngine.x)) ))* 360));
 			
-			xPosition = vector[0]*DartsEngine.distance;//DartsEngine.x;
-			yPosition = -vector[1]*DartsEngine.distance;//DartsEngine.y;
-			zPosition = DartsEngine.distance;
+			dart.xPosition = vector[0]*DartsEngine.distance;//DartsEngine.x;
+			dart.yPosition = -vector[1]*DartsEngine.distance;//DartsEngine.y;
+			dart.zPosition = DartsEngine.distance;
 			
-			throwdist += throwspeed;
+			dart.throwdist += throwspeed;
+			
+			
+			
 			DartsEngine.distance += throwspeed;
 			gl.glColor4f(1.0f,1.0f,1.0f,1f);  
 			
-			DartsEngine.throwx = vector[0]-startvector[0];//Previous position
-			DartsEngine.throwy = vector[1]-startvector[1];
+			dart.throwx = vector[0]-startvector[0];//Previous position
+			dart.throwy = vector[1]-startvector[1];
+			dart.velocity = throwdistmax-dart.throwdist+(dart.throwy);
 			
 			linepoints = new float[] { startvector[0],startvector[1],-1f,  vector[0]*DartsEngine.distance,vector[1]*DartsEngine.distance, -DartsEngine.distance, };
-			rotate = ((velocity/maxvelocity)*360)-180;
 			justletgo=true;
-		}else if(zPosition < zBoard && yPosition > DartsEngine.bottomy){
+		//}else if(dart.zPosition < zBoard && dart.yPosition > DartsEngine.bottomy){
+		}else if(dart.sta == Dart.state.inflight){
 			//once
 			if(justletgo){
-				velocity = throwdistmax-throwdist+(vector[1]-startvector[1]);
+				dart.velocity = throwdistmax-dart.throwdist+(dart.throwy);
 						 //DartsEngine.touchtime<maxvelocity ? maxvelocity-DartsEngine.touchtime: maxvelocity;
 				justletgo=false;
-				throwdist = 0f;
+				dart.throwdist = 0f;
 			}
 			
-			System.out.println("[[[[[[[[[[[[[[[[]]]]]]]]]] velocity= "+velocity+"  and touchtime= "+DartsEngine.touchtime);
+			System.out.println("[[[[[[[[[[[[[[[["+"]]]]]]]]]] velocity= "+dart.velocity+"  and touchtime= "+DartsEngine.touchtime);
 			
+		
 			
-			rotate = (float) Math.sin( ((velocity/maxvelocity)* 360 - 180) * Math.PI);
-			System.out.println("{{{-------}}}  Rotate = "+rotate);
+			dart.xPosition += (dart.throwx)*DartsEngine.gamespeed;
+			dart.yPosition -= (dart.throwy)*DartsEngine.gamespeed;
+			dart.zPosition += dart.velocity/10;
 			
-			xPosition += (DartsEngine.throwx)*DartsEngine.gamespeed;
-			yPosition -= (DartsEngine.throwy)*DartsEngine.gamespeed;
-			zPosition += velocity/10;
+			//dart.velocity *= 0.99; // Drag
 			
-			velocity *= 0.99; // Drag
-			
-			if(DartsEngine.throwy > -10)
-				DartsEngine.throwy -= .08f;
+			if(dart.throwy > -10)
+				dart.throwy -= .08f;
 			
 		    DartsEngine.z += .05f;
 		    
 		    gl.glColor4f(0.8f, 1.0f, 0.5f, 1.0f);
-		}else if(zPosition > zBoard){
-			velocity = 0;
-			rotate = ((velocity/maxvelocity)*360)-180;
-			if(zPosition > zBoard+2) zPosition = zBoard+0.5f; //Move dart in front of board
+		//}else if(dart.zPosition > zBoard){
+		}else if(dart.sta == Dart.state.landed){
+			dart.velocity = 0;
+			if(dart.zPosition > zBoard+2) dart.zPosition = zBoard+0.5f; //Move dart in front of board
 			 gl.glColor4f(1.0f,0.0f,0.0f,1f);  
-		}else if(yPosition > DartsEngine.bottomy){
-			gl.glColor4f(0.0f,1.0f,0.0f,1f);  
+			 
+			if(dart.yPosition > DartsEngine.bottomy){
+				gl.glColor4f(0.0f,1.0f,0.0f,1f);  
+			}
 		}
+		
+		
+		// (velocity/maxvelocity)*(360/2) - 180
+		dart.rotate = (float) Math.atan2((dart.yPrev-dart.yPosition),(dart.zPrev-dart.zPosition))*100;
+		System.out.println("{{{-------}}}  Rotate = "+dart.rotate);
+		///// TESTING BITCHES
+		/*double launchAngle = Math.tan(dart.throwy/dart.throwdist);
+		
+		final double DEG2RAD = Math.PI/180;
+		double ang = launchAngle * DEG2RAD;
+		double v0x = dart.throwvelocity * Math.cos(ang); // initial velocity in x
+		double v0y = dart.throwvelocity * Math.sin(ang); // initial velocity in y
+
+		double x = (v0x * time);
+		// double y = (v0y * time) + (0.5 * g * (float)Math.Pow(time, 2));
+		double y = (0.5 * g * time + v0y) * time
+				
+				
+	    double ang = Math.atan2(vy,vx); // don't forget, vy first!!!
+		double deg = ang * RAD2DEG;*/
+		///YAAAAA
+		
+		
+		dart.zPrev = dart.zPosition;
+		dart.yPrev = dart.yPosition;
+		
 		//Draw dart
 		gl.glPushMatrix();		  
 	    
-	      gl.glTranslatef(xPosition, -yPosition, -zPosition);
+	      gl.glTranslatef(dart.xPosition, -dart.yPosition, -dart.zPosition);
 	      //gl.glRotatef(rotate, 1.0f,0.0f, 0.0f);
-	      dart.draw(gl);
+	      dart.dartpiece.draw(gl);
 	    gl.glPopMatrix();
 	    
 	    gl.glColor4f(1f, 1f, 1f, 1f);
+	    
+	    
 	    gl.glPushMatrix();		  
 	      gl.glTranslatef(0f, 2f, -5f);
-	      gl.glRotatef(rotate, 1.0f,0.0f, 0.0f);
+	      //if(dart.velocity != 0)
+	      gl.glTranslatef((dart.xPosition/-dart.zPosition)*3, 0f, 0f);
+	      gl.glRotatef(-dart.rotate, 1.0f,0.0f, 0.0f);
 	      dartzoom.draw(gl);
 	    gl.glPopMatrix();
+	    
 	  
 	}
 	
 	private void drawBoard(GL10 gl){
 		gl.glPushMatrix();
-		  gl.glTranslatef(0f, -30f, -(zBoard+2.5f));
+		  gl.glTranslatef(0f, 0f, -(zBoard+2.5f));
 		  gl.glColor4f(1.0f,1.0f,1.0f,1f);  
 		  board.draw(gl);
 		gl.glPopMatrix();

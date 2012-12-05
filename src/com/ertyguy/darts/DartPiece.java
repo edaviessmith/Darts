@@ -12,39 +12,7 @@ import android.opengl.GLUtils;
 import javax.microedition.khronos.opengles.GL10;
 
 
-public class Dart {
-	
-	public DartPiece dartpiece;
-	
-	public float zPosition = 10f;
-	public float xPosition = 0f;
-	public float yPosition = 0f;
-	public float zPrev = 10f;
-	public float xPrev = 0f;
-	public float yPrev = 0f;
-	
-	public float velocity = 0;
-	public float rotate = 0f;
-	public float throwdist = 0f;
-	public float throwx = 0f;
-	public float throwy = 0f;
-	public float throwvelocity;
-	
-	
-	public state sta = state.hidden;
-	
-	public Dart(){
-		dartpiece  = new DartPiece();
-	}
-	
-	public enum state{
-		hidden,
-		inhand,
-		inflight,
-		landed
-	}
-	
-	/*
+public class DartPiece {
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer colorBuffer;
 	//private int[] textures = new int[2];
@@ -140,7 +108,7 @@ public class Dart {
     };
 	
 	
-	public Dart() {
+	public DartPiece() {
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		vertexBuffer = byteBuf.asFloatBuffer();
@@ -181,7 +149,7 @@ public class Dart {
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		
 		gl.glDisable(GL10.GL_CULL_FACE);
-	}*/
+	}
 	
 }
 

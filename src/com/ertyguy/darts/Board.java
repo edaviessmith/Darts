@@ -24,10 +24,10 @@ public class Board {
 		//20f, 40.0f, 0f,  //Front with indeces
 		//-20f, 40.0f, 0f,	
 		
-		-20f, 0.0f, 0f, 
-		20f, 0.0f, 0f, 
-		-20f, 40.0f, 0f,  //Front
-		20f, 40.0f, 0f,		
+		-15f, -15.0f, 0f, 
+		15f, -15.0f, 0f, 
+		-15f, 15.0f, 0f,  //Front
+		15f, 13.0f, 0f,		
 	};
 		
 	private float texture[] = {
