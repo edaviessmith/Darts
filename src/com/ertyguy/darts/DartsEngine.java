@@ -1,6 +1,9 @@
 package com.ertyguy.darts;
 
+import android.graphics.Point;
+
 import android.content.Context;
+//import android.graphics.Point;
 import android.view.Display;
 
 public class DartsEngine {
@@ -35,6 +38,9 @@ public class DartsEngine {
 	
 	/*Game Variables*/
 	public static Context context;
+	
 	public static Display display;
+	public static Point size = new Point();
+	
 	public static DartsGameView gameView;
 }

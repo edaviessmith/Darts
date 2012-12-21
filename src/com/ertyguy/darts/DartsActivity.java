@@ -1,11 +1,7 @@
 package com.ertyguy.darts;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import javax.microedition.khronos.opengles.GL;
-
 import com.ertyguy.darts.DartsEngine;
 import com.ertyguy.darts.DartsGameView;
 
@@ -13,23 +9,20 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.text.format.Time;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
 public class DartsActivity extends Activity {
-	//private DartsGameView gameView;
-	//private float startx=0f,starty=0f;
-	private MatrixGrabber mg = new MatrixGrabber();
-	private int touchtime;
-	//Calendar c = Calendar.getInstance(); 
+
 	Date now = new Date();
-	private boolean firsttouch = true;
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	DartsEngine.display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+    	DartsEngine.display.getSize(DartsEngine.size);
+    	
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);   
@@ -45,8 +38,7 @@ public class DartsActivity extends Activity {
 	    });
         
         DartsEngine.context = this;
-        
-        //DartsEngine.gameView = gameView;
+
     }
 
     @Override
@@ -60,22 +52,19 @@ public class DartsActivity extends Activity {
 	    DartsEngine.gameView.onPause();
     }
     
-    @SuppressWarnings("deprecation")
 	@Override
     public boolean onTouchEvent(MotionEvent event) {
     	float x = event.getX();
     	float y = event.getY();
     	
-    	
-    	//x = (x-DartsEngine.display.getWidth() / 2);
-    	y = (DartsEngine.display.getHeight()-y);
+    	y = (DartsEngine.size.y-y);
     	switch (event.getAction()){
 			case MotionEvent.ACTION_DOWN:
 				DartsEngine.startx = x;
 				DartsEngine.starty = y;
 				DartsEngine.pressed = true;
-				DartsEngine.x = (x);//-DartsEngine.display.getWidth() / 2;
-				DartsEngine.y = (y);
+				DartsEngine.x = x;
+				DartsEngine.y = y;
 				
 				now = new Date();
 				DartsEngine.distance = 1;
@@ -86,25 +75,20 @@ public class DartsActivity extends Activity {
 				Dart dart = new Dart();
 				dart.sta = Dart.state.inhand;
 				DartsEngine.darts[DartsEngine.selecteddart] = dart;
-				
-				//firsttouch = false; //cheap hack
 				break;
 				
 			case MotionEvent.ACTION_MOVE:
 				
-				DartsEngine.x = (x);//-DartsEngine.display.getWidth() / 2;
-				DartsEngine.y = (y);
+				DartsEngine.x = x;
+				DartsEngine.y = y;
 				break;
 				
 			case MotionEvent.ACTION_UP:
 				Date releasetime = new Date();
 				
-				DartsEngine.touchtime = (int) (releasetime.getTime() - now.getTime()) / 10 ;//c.get(Calendar.SECOND) - touchtime;
+				DartsEngine.touchtime = (int) (releasetime.getTime() - now.getTime()) / 10 ;
 
 				DartsEngine.pressed = false;
-				
-				//DartsEngine.throwx = (x);
-				//DartsEngine.throwy = (- y);
 				break;
 				
     	}

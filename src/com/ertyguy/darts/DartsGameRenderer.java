@@ -3,7 +3,6 @@ package com.ertyguy.darts;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -13,7 +12,6 @@ import com.ertyguy.darts.DartsEngine;
 import android.opengl.GLES10;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.FloatMath;
 
 public class DartsGameRenderer implements Renderer{
 	
@@ -29,7 +27,7 @@ public class DartsGameRenderer implements Renderer{
 	private long loopEnd = 0;
 	private long loopRunTime = 0 ;
 	
-	private boolean justletgo = false;
+	//private boolean justletgo = false;
 	private float zBoard = 50;
 	private float zReach = 15;
 
@@ -61,7 +59,7 @@ public class DartsGameRenderer implements Renderer{
 		
 		//gl.glLoadIdentity();
 		
-		gl.glViewport(0, 0, DartsEngine.display.getWidth(), DartsEngine.display.getHeight());
+		gl.glViewport(0, 0, DartsEngine.size.x, DartsEngine.size.y);
 	    gl.glMatrixMode(GL10.GL_PROJECTION);
 	    gl.glLoadIdentity();
 	    //gl.glFrustumf(-0.5f, 0.5f, -0.5f, 0.5f, 1, 100);
@@ -90,7 +88,7 @@ public class DartsGameRenderer implements Renderer{
 		MatrixGrabber matrixGrabber = new MatrixGrabber();
         matrixGrabber.getCurrentModelView(gl);  
         matrixGrabber.getCurrentProjection(gl);
-        //Map positions relative to screen
+        //Map finger positions relative to screen
         boolean unprojectedNearStart = (GLU.gluUnProject(DartsEngine.startx, DartsEngine.starty, 0f, matrixGrabber.mModelView, 0, matrixGrabber.mProjection, 0, new int[]{DartsEngine.gameView.getTop(),DartsEngine.gameView.getLeft(),DartsEngine.gameView.getWidth(),DartsEngine.gameView.getHeight()}, 0, startvector, 0) == GLES10.GL_TRUE);
         boolean unprojectedNear = (GLU.gluUnProject(DartsEngine.x, DartsEngine.y, 0f, matrixGrabber.mModelView, 0, matrixGrabber.mProjection, 0, new int[]{DartsEngine.gameView.getTop(),DartsEngine.gameView.getLeft(),DartsEngine.gameView.getWidth(),DartsEngine.gameView.getHeight()}, 0, vector, 0) == GLES10.GL_TRUE);
         
@@ -172,7 +170,7 @@ public class DartsGameRenderer implements Renderer{
 	private void drawDart(GL10 gl, Dart dart){
 
 		if(dart.sta == Dart.state.inhand){
-			
+
 			dart.position[Z] += throwspeed;
 			dart.position[X] = vector[X]*dart.position[Z];
 			dart.position[Y] = -vector[Y]*dart.position[Z];
