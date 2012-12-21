@@ -17,6 +17,53 @@ public class DartZoom {
 	private FloatBuffer textureBuffer;
 	private int[] textures = new int[1];
 	
+	private float xl = -0.25f;
+	private float xr = 0.25f;
+	private float zf = 0.5f;
+	private float zb = -0.5f;
+	private float yt = 0.5f;
+	private float yb = 0.0f;
+	
+	private float vertices[] = {
+		
+		xl, yb, zf, 
+		xr, yb, zf,
+		xl, yb, zb,  //Bottom
+		xr, yb, zb, 
+		
+		
+		xl, yb, zb, 
+		xr, yb, zb, 
+		xl, yt, zb,  //Front
+		xr, yt, zb,		
+		
+		
+		xl, yb, zb, 
+		xl, yb, zf, 
+		xl, yt, zb, //Left
+		xl, yt, zf,
+		
+		
+		xr, yb, zf, 
+		xr, yb, zb, 
+		xr, yt, zf, //Right
+		xr, yt, zb,
+		
+		
+		xl, yb, zf, 
+		xr, yb, zf, 
+		xl, yt, zf,  //Back
+		xr, yt, zf,
+		
+		
+		xl, yt, zf, 
+		xr, yt, zf, 
+		xl, yt, zb, //Top
+		xr, yt, zb,
+		
+	};
+	
+	/*
 	private float vertices[] = {
 		
 		-0.25f, 0.0f, 0.25f, 
@@ -27,34 +74,34 @@ public class DartZoom {
 		
 		-0.25f, 0.0f, -0.25f, 
 		0.25f, 0.0f, -0.25f, 
-		-0.25f, 1.0f, -0.25f,  //Front
-		0.25f, 1.0f, -0.25f,		
+		-0.25f, 0.5f, -0.25f,  //Front
+		0.25f, 0.5f, -0.25f,		
 		
 		
 		-0.25f, 0.0f, -0.25f, 
 		-0.25f, 0.0f, 0.25f, 
-		-0.25f, 1.0f, -0.25f, //Left
-		-0.25f, 1.0f, 0.25f,
+		-0.25f, 0.5f, -0.25f, //Left
+		-0.25f, 0.5f, 0.25f,
 		
 		
 		0.25f, 0.0f, 0.25f, 
 		0.25f, 0.0f, -0.25f, 
-		0.25f, 1.0f, 0.25f, //Right
-		0.25f, 1.0f, -0.25f,
+		0.25f, 0.5f, 0.25f, //Right
+		0.25f, 0.5f, -0.25f,
 		
 		
 		-0.25f, 0.0f, 0.25f, 
 		0.25f, 0.0f, 0.25f, 
-		-0.25f, 1.0f, 0.25f,  //Back
-		0.25f, 1.0f, 0.25f,
+		-0.25f, 0.5f, 0.25f,  //Back
+		0.25f, 0.5f, 0.25f,
 		
 		
-		-0.25f, 1.0f, 0.25f, 
-		0.25f, 1.0f, 0.25f, 
-		-0.25f, 1.0f, -0.25f, //Top
-		0.25f, 1.0f, -0.25f,
+		-0.25f, 0.5f, 0.25f, 
+		0.25f, 0.5f, 0.25f, 
+		-0.25f, 0.5f, -0.25f, //Top
+		0.25f, 0.5f, -0.25f,
 		
-	};
+	};*/
 	
 	private float texture[] = {
 			0.0f, 0.0f,
@@ -104,8 +151,11 @@ public class DartZoom {
 	}
 	
 	public void draw(GL10 gl) {
+		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
-		gl.glFrontFace(GL10.GL_CCW);
+		//gl.glFrontFace(GL10.GL_CCW);
+		//gl.glEnable(GL10.GL_CULL_FACE);
+		//gl.glCullFace(GL10.GL_BACK);
 		
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
@@ -123,7 +173,8 @@ public class DartZoom {
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		
-		gl.glDisable(GL10.GL_CULL_FACE);
+		//gl.glDisable(GL10.GL_CULL_FACE);
+		gl.glDisable(GL10.GL_TEXTURE_2D);
 	}
 	
 	public void loadTexture(GL10 gl,int texture, Context context) {

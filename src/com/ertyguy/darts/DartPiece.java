@@ -1,61 +1,77 @@
 package com.ertyguy.darts;
 
+//import java.io.IOException;
+//import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+//import android.content.Context;
+//import android.graphics.Bitmap;
+//import android.graphics.BitmapFactory;
+//import android.opengl.GLUtils;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
-import javax.microedition.khronos.opengles.GL10;
 
 
 public class DartPiece {
 	private FloatBuffer vertexBuffer;
-	private FloatBuffer colorBuffer;
-	//private int[] textures = new int[2];
+	private FloatBuffer textureBuffer;
+	private int[] textures = new int[1];
+	
+	//Dart box coordinates
+	private float xl = -0.25f;
+	private float xr = 0.25f;
+	private float zf = 0.5f;
+	private float zb = -0.5f;
+	private float yt = 0.5f;
+	private float yb = 0.0f;
 	
 	private float vertices[] = {
 		
-		-0.25f, 0.0f, 0.25f, 
-		0.25f, 0.0f, 0.25f,
-		-0.25f, 0.0f, -0.25f,  //Bottom
-		0.25f, 0.0f, -0.25f, 
+		xl, yb, zf, 
+		xr, yb, zf,
+		xl, yb, zb,  //Bottom
+		xr, yb, zb, 
 		
 		
-		-0.25f, 0.0f, -0.25f, 
-		0.25f, 0.0f, -0.25f, 
-		-0.25f, 1.0f, -0.25f,  //Front
-		0.25f, 1.0f, -0.25f,		
+		xl, yb, zb, 
+		xr, yb, zb, 
+		xl, yt, zb,  //Front
+		xr, yt, zb,		
 		
 		
-		-0.25f, 0.0f, -0.25f, 
-		-0.25f, 0.0f, 0.25f, 
-		-0.25f, 1.0f, -0.25f, //Left
-		-0.25f, 1.0f, 0.25f,
+		xl, yb, zb, 
+		xl, yb, zf, 
+		xl, yt, zb, //Left
+		xl, yt, zf,
 		
 		
-		0.25f, 0.0f, 0.25f, 
-		0.25f, 0.0f, -0.25f, 
-		0.25f, 1.0f, 0.25f, //Right
-		0.25f, 1.0f, -0.25f,
+		xr, yb, zf, 
+		xr, yb, zb, 
+		xr, yt, zf, //Right
+		xr, yt, zb,
 		
 		
-		-0.25f, 0.0f, 0.25f, 
-		0.25f, 0.0f, 0.25f, 
-		-0.25f, 1.0f, 0.25f,  //Back
-		0.25f, 1.0f, 0.25f,
+		xl, yb, zf, 
+		xr, yb, zf, 
+		xl, yt, zf,  //Back
+		xr, yt, zf,
 		
 		
-		-0.25f, 1.0f, 0.25f, 
-		0.25f, 1.0f, 0.25f, 
-		-0.25f, 1.0f, -0.25f, //Top
-		0.25f, 1.0f, -0.25f,
+		xl, yt, zf, 
+		xr, yt, zf, 
+		xl, yt, zb, //Top
+		xr, yt, zb,
 		
 	};
 	
+	/*
 	float color1[] = { 255,   0,   0 };
     float color2[] = {   0, 255,   0 };
     float color3[] = {   0,   0, 255 };
@@ -106,6 +122,38 @@ public class DartPiece {
         //color6[0], color6[1], color6[2],
         //color6[0], color6[1], color6[2],
     };
+	*/
+	private float texture[] = {
+			0.0f, 0.0f,
+			1.0f, 0f,
+			0f, 1f,
+			1f, 1.0f,
+			/*
+			0.0f, 0.0f,
+			1.0f, 0f,
+			0f, 1f,
+			1f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 0f,
+			0f, 1f,
+			1f, 1.0f,
+			
+			0.0f, 0.0f,
+			1.0f, 0f,
+			0f, 1f,
+			1f, 1.0f,
+			
+			0.0f, 0.0f,
+			1.0f, 0f,
+			0f, 1f,
+			1f, 1.0f,
+			
+			0.0f, 0.0f,
+			1.0f, 0f,
+			0f, 1f,
+			1f, 1.0f,*/
+		};
 	
 	
 	public DartPiece() {
@@ -115,16 +163,24 @@ public class DartPiece {
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
 		
+		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
+		byteBuf.order(ByteOrder.nativeOrder());
+		textureBuffer = byteBuf.asFloatBuffer();
+		textureBuffer.put(texture);
+		textureBuffer.position(0);
+		/*
 		byteBuf = ByteBuffer.allocateDirect(color.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		colorBuffer = byteBuf.asFloatBuffer();
 		colorBuffer.put(color);
-		colorBuffer.position(0);
+		colorBuffer.position(0);*/
 	}
 	
 	public void draw(GL10 gl) {
 		//gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
-		gl.glFrontFace(GL10.GL_CCW);
+		 //gl.glFrontFace(GL10.GL_CCW);
+		 //gl.glEnable(GL10.GL_CULL_FACE);
+		 //gl.glCullFace(GL10.GL_BACK);
 		
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
 		//gl.glColorPointer(3, GL10.GL_FLOAT, 0, colorBuffer);
@@ -148,8 +204,30 @@ public class DartPiece {
 		//gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		
-		gl.glDisable(GL10.GL_CULL_FACE);
+		 //gl.glDisable(GL10.GL_CULL_FACE);
 	}
 	
+	public void loadTexture(GL10 gl,int texture, Context context) {
+		InputStream imagestream = context.getResources().openRawResource(texture);
+		Bitmap bitmap = null;
+		try {
+			bitmap = BitmapFactory.decodeStream(imagestream);
+		}catch(Exception e){
+		}finally {
+			try {
+				imagestream.close();
+				imagestream = null;
+			} catch (IOException e) {
+			}
+		}
+		gl.glGenTextures(1, textures, 0);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+		bitmap.recycle();
+	}
 }
 

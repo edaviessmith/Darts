@@ -84,8 +84,8 @@ public class DartsActivity extends Activity {
 				else
 					DartsEngine.selecteddart = 0;
 				Dart dart = new Dart();
+				dart.sta = Dart.state.inhand;
 				DartsEngine.darts[DartsEngine.selecteddart] = dart;
-				DartsEngine.darts[DartsEngine.selecteddart].sta = Dart.state.inhand;
 				
 				//firsttouch = false; //cheap hack
 				break;

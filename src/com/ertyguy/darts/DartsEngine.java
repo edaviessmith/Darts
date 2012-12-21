@@ -25,20 +25,13 @@ public class DartsEngine {
 	public static int maxdarts = 5;
 	
 	public static Dart[] darts = new Dart[DartsEngine.maxdarts];
-	
-	public static final float gamespeed = .5f;//1f;
+	public static final double[] vectorscale = new double[]{0.5,0.5,0.1};
+	//public static final float gamespeed = .5f;//1f;
 	
 	public static final int BOARD = R.drawable.dartboard;
 	public static final int CEMENT = R.drawable.cement;
 	
 	public static boolean pressed = false;
-	public static final int PLAYER_FORWARD = 1;
-	public static final int PLAYER_RIGHT = 2;
-	public static final int PLAYER_LEFT = 3;
-	public static final int PLAYER_BACK = 4;
-	public static final float PLAYER_ROTATE_SPEED = 2f;
-	public static final float PLAYER_WALK_SPEED =0.1f;
-	public static int playerMovementAction = 0;
 	
 	/*Game Variables*/
 	public static Context context;
