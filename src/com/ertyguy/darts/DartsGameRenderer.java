@@ -96,12 +96,16 @@ public class DartsGameRenderer implements Renderer{
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         
+
 		if(unprojectedNear) {
 			for(int i=0; i< DartsEngine.maxdarts && DartsEngine.selecteddart>=0;i++ ){
 				if(i <= DartsEngine.selecteddart){
-					if(i==DartsEngine.selecteddart){
-						//Dart dart = new Dart();
-						//DartsEngine.darts[i] = dart;
+					if(i==DartsEngine.selecteddart && DartsEngine.pressed){
+						if(DartsEngine.darts[DartsEngine.selecteddart] == null || DartsEngine.darts[DartsEngine.selecteddart].sta == Dart.state.hidden){
+							Dart dart = new Dart();
+							dart.sta = Dart.state.inhand;
+							DartsEngine.darts[DartsEngine.selecteddart] = dart;
+						}
 						System.out.println("{{{-------}}}"+" Position Z: "+DartsEngine.darts[i].position[2]+" Y: "+DartsEngine.darts[i].position[1]);
 					}
 					
@@ -179,7 +183,7 @@ public class DartsGameRenderer implements Renderer{
 			dart.velocity[Y] = vector[Y]-startvector[Y];
 			dart.velocity[Z] = throwdistmax-dart.position[Z];//+(dart.velocity[Y]);
 			
-			linepoints = new float[] { startvector[X],startvector[Y],-1f,  vector[X]*DartsEngine.distance,vector[Y]*DartsEngine.distance, -DartsEngine.distance, };
+			linepoints = new float[] { startvector[X],startvector[Y],-1f,  vector[X],vector[Y], -1f, };
 		}else if(dart.sta == Dart.state.inflight){
 			
 			System.out.println("[[[[[[[[[[[[[[[["+"]]]]]]]]]] velocity= "+dart.velocity[Z]+"  and touchtime= "+DartsEngine.touchtime);

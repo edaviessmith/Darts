@@ -23,7 +23,7 @@ public class DartsEngine {
 	public static float bottomy = -20;
 	
 	public static int touchtime;
-	public static float distance;
+	//public static float distance;
 	public static int selecteddart = -1;
 	public static int maxdarts = 5;
 	

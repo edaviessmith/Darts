@@ -67,14 +67,16 @@ public class DartsActivity extends Activity {
 				DartsEngine.y = y;
 				
 				now = new Date();
-				DartsEngine.distance = 1;
+				
 				if(DartsEngine.selecteddart+1 < DartsEngine.maxdarts )
 					DartsEngine.selecteddart ++;
 				else
 					DartsEngine.selecteddart = 0;
-				Dart dart = new Dart();
+				/*Dart dart = new Dart();
 				dart.sta = Dart.state.inhand;
-				DartsEngine.darts[DartsEngine.selecteddart] = dart;
+				DartsEngine.darts[DartsEngine.selecteddart] = dart;*/
+				
+				
 				break;
 				
 			case MotionEvent.ACTION_MOVE:

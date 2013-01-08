@@ -11,18 +11,12 @@ public class Dart {
 	public float[] prevposition = position.clone();	
 	public float[] velocity = new float[3];
 	
-	//public float vel = 0;
 	public float rotate = 0f;
-	//public float throwdist = 0f;
-	//public float throwx = 0f;
-	//public float throwy = 0f;
-	//public float throwvelocity;
-	
-	
-	public state sta = state.hidden;
+	public state sta;
 	
 	public Dart(){
 		dartpiece  = new DartPiece();
+		sta = state.hidden;
 	}
 	
 	public enum state{
